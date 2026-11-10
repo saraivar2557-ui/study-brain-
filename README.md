@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Brain</title>
+<style>
+:root{--green:#80bd75;--green2:#5b9b55;--bg:#f4f8f2;--card:#fff;--text:#263329;--muted:#718074;--line:#e1e9df;--soft:#eaf4e7;--shadow:0 5px 20px #243d2410}
+body.dark{--bg:#151b17;--card:#222b25;--text:#edf5ed;--muted:#aebcaf;--line:#39453c;--soft:#2c3b2e;--shadow:0 5px 20px #0003}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;transition:.2s}
+header{background:var(--card);border-bottom:1px solid var(--line);padding:14px max(4%,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:50%;background:#e9c85d;display:grid;place-items:center;font-size:27px}.brand h1{margin:0;font-size:22px}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
+button{border:0;border-radius:12px;padding:11px 15px;background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:.15s}button:hover{transform:translateY(-1px);box-shadow:var(--shadow)}button:focus-visible,input:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.primary,.active{background:var(--green2)!important;color:white!important}.secondary{background:var(--soft)}nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:13px}
+main{width:min(1050px,92%);margin:25px auto 55px;min-height:65vh}.welcome{text-align:center;max-width:720px;margin:35px auto;padding:25px 15px}.biglogo{width:112px;height:112px;border-radius:50%;background:#e9c85d;display:grid;place-items:center;font-size:64px;margin:0 auto 18px}.welcome h2{font-size:32px;margin:10px 0}.welcome h3{color:var(--green2)}.welcome p{color:var(--muted);line-height:1.8}
+.pagehead{margin:0 0 20px}.pagehead h2{margin:0 0 6px}.pagehead p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px}.subject,.tile,.panel{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:var(--shadow)}.subject{border-left:6px solid var(--c);cursor:pointer}.subject .emoji,.tile .emoji{font-size:29px;margin-bottom:10px}.subject h3,.tile h3{margin:0 0 7px}.subject p,.tile p{color:var(--muted);font-size:13px;margin:0;line-height:1.5}.tile{width:100%;text-align:left;cursor:pointer}.back{margin-bottom:17px;background:var(--soft)}.panel{line-height:1.7;margin:14px 0}.panel h3{margin:0 0 10px}.note{background:var(--soft);border-left:4px solid var(--green2);padding:12px 15px;border-radius:9px;margin:13px 0}.search{width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-size:15px;margin:12px 0 18px}
+.topic{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;margin:9px 0;border:1px solid var(--line);background:var(--card)}.topic small{display:block;color:var(--muted);margin-top:4px}.star{font-size:20px;padding:6px;background:transparent}.muted{color:var(--muted)}.empty{text-align:center;padding:32px;background:var(--card);border-radius:15px;color:var(--muted)}
+.option{display:block;width:100%;text-align:left;margin:9px 0;border:1px solid var(--line);background:var(--card)}.option.selected{border:2px solid var(--green2);background:var(--soft)}.feedback{padding:13px;border-radius:10px;background:var(--soft);margin:12px 0}.progress{height:9px;background:var(--line);border-radius:20px;overflow:hidden}.progress span{display:block;height:100%;background:var(--green2)}
+.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{background:var(--soft);border-radius:12px;padding:12px 15px}.stat strong{display:block;font-size:20px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+@media(max-width:600px){header{justify-content:center}.welcome h2{font-size:26px}nav button{padding:10px 11px}main{margin-top:18px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand"><div class="logo">🧠</div><div><h1>Study Brain</h1><p>O futuro começa agora.</p></div></div>
+ <button id="themeBtn" onclick="toggleTheme()">🌙 Modo escuro</button>
+</header>
+<nav id="nav">
+ <button class="active" onclick="home()">🏠 Início</button>
+ <button onclick="subjectsPage()">📚 Disciplinas</button>
+ <button onclick="favoritesPage()">⭐ Favoritos</button>
+ <button onclick="settingsPage()">⚙️ Definições</button>
+</nav>
+<main id="app"></main>
+<footer>Study Brain · Aprende. Pratica. Conquista.</footer>
+<script>
+const subjects=[
+ {name:"Matemática",icon:"📐",color:"#5599e8"},
+ {name:"Português",icon:"📖",color:"#e66b6b"},
+ {name:"Ciências Naturais",icon:"🌿",color:"#65b77b"},
+ {name:"Físico-Química",icon:"⚗️",color:"#a47bd5"},
+ {name:"Inglês",icon:"🇬🇧",color:"#71b8df"},
+ {name:"Espanhol",icon:"🇪🇸",color:"#e99a54"},
+ {name:"Geografia",icon:"🌍",color:"#50b9b0"},
+ {name:"História",icon:"🏛️",color:"#d7b64d"},
+ {name:"TIC",icon:"💻",color:"#92999c"},
+ {name:"Educação Física",icon:"⚽",color:"#e88b79"},
+ {name:"Educação Visual",icon:"🎨",color:"#df91bd"},
+ {name:"Música",icon:"🎵",color:"#a98bd6"}
+];
+const sections=[
+ {name:"Resumos",icon:"📝",desc:"Explicações curtas e organizadas."},
+ {name:"Exercícios",icon:"✏️",desc:"Pratica com perguntas variadas."},
+ {name:"Preparação para testes",icon:"🎯",desc:"Faz mini-testes e acompanha os resultados."},
+ {name:"Matéria completa",icon:"📚",desc:"Consulta a matéria por temas."}
+];
+// Conteúdos de demonstração originais. A cobertura curricular completa será acrescentada por disciplina e tema.
+const topics={
+ "Matemática":[
+  {name:"Equações do 1.º grau",icon:"➗",summary:"Uma equação é uma igualdade com uma ou mais incógnitas. Resolver uma equação é encontrar o valor que torna a igualdade verdadeira.",body:["A incógnita é normalmente representada por x.","O primeiro membro fica à esquerda do sinal de igual; o segundo membro fica à direita.","Para manter a igualdade, fazemos a mesma operação nos dois membros."],example:"2x + 4 = 10 → 2x = 6 → x = 3",questions:[
+   {q:"Qual é a solução de 2x + 4 = 10?",opts:["x = 2","x = 3","x = 7"],a:1,why:"Subtraindo 4, fica 2x = 6. Dividindo por 2, x = 3."},
+   {q:"O que representa a incógnita?",opts:["Um valor desconhecido","O sinal de igual","O resultado de uma soma"],a:0,why:"A incógnita é o valor que pretendemos descobrir."},
+   {q:"Qual é a solução de x - 5 = 8?",opts:["x = 3","x = 13","x = 40"],a:1,why:"Somamos 5 aos dois membros: x = 13."}
+  ]}
+ ],
+ "Português":[{name:"Classes de palavras",icon:"🔤",summary:"As palavras podem ser agrupadas em classes de acordo com a sua função e características.",body:["O nome designa seres, objetos, lugares ou ideias.","O verbo exprime uma ação, estado ou acontecimento.","O adjetivo caracteriza o nome."],example:"Em «A aluna estudiosa lê», «aluna» é nome, «estudiosa» é adjetivo e «lê» é verbo.",questions:[{q:"Qual destas palavras é um verbo?",opts:["Bonito","Correr","Mesa"],a:1,why:"Correr é um verbo no infinitivo."}]}],
+ "Ciências Naturais":[{name:"Organização do corpo humano",icon:"🫀",summary:"O corpo humano organiza-se em células, tecidos, órgãos e sistemas de órgãos.",body:["As células são unidades básicas dos seres vivos.","Tecidos são conjuntos de células semelhantes.","Os órgãos trabalham em conjunto nos sistemas."],example:"Células musculares formam tecido muscular; vários tecidos constituem um órgão.",questions:[{q:"Qual é a unidade básica dos seres vivos?",opts:["Órgão","Célula","Sistema"],a:1,why:"A célula é a unidade estrutural e funcional dos seres vivos."}]}],
+ "Físico-Química":[{name:"Constituição da matéria",icon:"⚛️",summary:"A matéria é constituída por partículas, como átomos, moléculas e iões.",body:["Os átomos são constituídos por protões, neutrões e eletrões.","Os protões têm carga positiva e os eletrões carga negativa.","Os neutrões não têm carga elétrica."],example:"Num átomo neutro, o número de protões é igual ao número de eletrões.",questions:[{q:"Que partícula tem carga negativa?",opts:["Protão","Neutrão","Eletrão"],a:2,why:"O eletrão tem carga elétrica negativa."}]}],
+ "Inglês":[{name:"Present Simple",icon:"🇬🇧",summary:"O Present Simple é usado para rotinas, hábitos e factos gerais.",body:["Com I, you, we e they usa-se normalmente a forma base do verbo.","Com he, she e it acrescenta-se geralmente -s ao verbo.","Em perguntas usam-se do e does."],example:"She plays tennis. / Do you like music?",questions:[{q:"Choose the correct sentence.",opts:["He play football.","He plays football.","He playing football."],a:1,why:"Na terceira pessoa do singular, o verbo recebe geralmente -s."}]}],
+ "Espanhol":[{name:"Presentarse",icon:"🇪🇸",summary:"Para te apresentares em espanhol, podes dizer o teu nome, idade e origem.",body:["Me llamo… significa «Chamo-me…».","Tengo … años significa «Tenho … anos».","Soy de… significa «Sou de…»."],example:"Hola, me llamo Ana y soy de Portugal.",questions:[{q:"Como se diz «Chamo-me»?",opts:["Me llamo","Tengo","Estoy"],a:0,why:"«Me llamo» é a expressão usada para dizer o nome."}]}],
+ "Geografia":[{name:"População e distribuição",icon:"🗺️",summary:"A população não se distribui de forma uniforme pelo território.",body:["A densidade populacional relaciona população e área.","As áreas urbanas tendem a concentrar mais população.","Fatores naturais, económicos e sociais influenciam a distribuição."],example:"Densidade populacional = número de habitantes ÷ área (km²).",questions:[{q:"Como se calcula a densidade populacional?",opts:["Área ÷ habitantes","Habitantes ÷ área","Habitantes × área"],a:1,why:"Divide-se o número de habitantes pela área."}]}],
+ "História":[{name:"A Europa no século XX",icon:"🏛️",summary:"O século XX foi marcado por profundas transformações políticas, sociais e económicas.",body:["A Primeira Guerra Mundial decorreu entre 1914 e 1918.","A Segunda Guerra Mundial decorreu entre 1939 e 1945.","Depois de 1945, a Europa iniciou um longo processo de reconstrução."],example:"A criação de organizações internacionais procurou promover a cooperação e a paz.",questions:[{q:"Em que ano terminou a Segunda Guerra Mundial?",opts:["1918","1939","1945"],a:2,why:"A Segunda Guerra Mundial terminou em 1945."}]}],
+ "TIC":[{name:"Segurança digital",icon:"🔐",summary:"A segurança digital ajuda a proteger dispositivos, contas e informação pessoal.",body:["Usa palavras-passe fortes e diferentes.","Não partilhes dados pessoais com desconhecidos.","Confirma a origem de links e ficheiros antes de os abrir."],example:"Uma palavra-passe forte combina vários tipos de caracteres e não é fácil de adivinhar.",questions:[{q:"O que deves fazer perante um link suspeito?",opts:["Abrir imediatamente","Partilhá-lo","Não abrir e confirmar a origem"],a:2,why:"É importante verificar a origem antes de abrir links."}]}],
+ "Educação Física":[{name:"Aptidão física",icon:"🏃",summary:"A aptidão física inclui capacidades que contribuem para realizar atividade física.",body:["A resistência permite manter um esforço durante algum tempo.","A força permite vencer ou contrariar uma resistência.","A flexibilidade está relacionada com a amplitude dos movimentos."],example:"Caminhar, correr, saltar e alongar trabalham diferentes capacidades.",questions:[{q:"Que capacidade está ligada à amplitude dos movimentos?",opts:["Flexibilidade","Força","Velocidade"],a:0,why:"A flexibilidade relaciona-se com a amplitude dos movimentos."}]}],
+ "Educação Visual":[{name:"Elementos da linguagem visual",icon:"🖍️",summary:"A linguagem visual utiliza elementos como ponto, linha, forma, cor, textura e volume.",body:["O ponto pode marcar uma posição ou criar padrões.","A linha pode sugerir direção e movimento.","A cor transmite sensações e ajuda a organizar a composição."],example:"Linhas diagonais podem transmitir sensação de movimento.",questions:[{q:"Qual é um elemento da linguagem visual?",opts:["Textura","Parágrafo","Ritmo cardíaco"],a:0,why:"A textura é um elemento da linguagem visual."}]}],
+ "Música":[{name:"Elementos da música",icon:"🎼",summary:"A música organiza sons e silêncios através de elementos como ritmo, melodia, harmonia e timbre.",body:["O ritmo organiza durações e acentuações.","A melodia é uma sequência de sons percebida como uma unidade.","O timbre permite distinguir fontes sonoras."],example:"A mesma nota tocada por um piano e por uma flauta tem timbres diferentes.",questions:[{q:"O que permite distinguir o som de instrumentos diferentes?",opts:["Timbre","Silêncio","Pausa"],a:0,why:"O timbre caracteriza a qualidade de um som."}]}
+]
+};
+let favorites=JSON.parse(localStorage.getItem("sb_favs")||"[]");
+let scores=JSON.parse(localStorage.getItem("sb_scores")||"[]");
+let currentSubject="",currentSection="",currentTopic=null,quiz=null,quizIndex=0,answers=[];
+function el(){return document.getElementById("app")}
+function save(){localStorage.setItem("sb_favs",JSON.stringify(favorites));localStorage.setItem("sb_scores",JSON.stringify(scores))}
+function setNav(n){document.querySelectorAll("#nav button").forEach((b,i)=>b.classList.toggle("active",i===n))}
+function toggleTheme(){document.body.classList.toggle("dark");let d=document.body.classList.contains("dark");localStorage.setItem("sb_theme",d?"dark":"light");document.getElementById("themeBtn").textContent=d?"☀️ Modo claro":"🌙 Modo escuro"}
+if(localStorage.getItem("sb_theme")==="dark"){document.body.classList.add("dark");document.getElementById("themeBtn").textContent="☀️ Modo claro"}
+function home(){setNav(0);el().innerHTML=`<section class="welcome"><div class="biglogo">🧠</div><h2>Bem-vindo à Study Brain!</h2><h3>O futuro começa agora.</h3><p>Aqui vais encontrar tudo o que precisas para aprender, praticar e preparar os teus testes. Descobre, aprende e supera os teus limites. O teu sucesso começa aqui!</p><strong>Aprende. Pratica. Conquista.</strong></section>`}
+function subjectsPage(){setNav(1);let h=`<div class="pagehead"><h2>📚 As tuas disciplinas</h2><p>Escolhe uma disciplina para começar.</p></div><div class="grid">`;subjects.forEach(s=>h+=`<div class="subject" style="--c:${s.color}" onclick="openSubject('${s.name}')"><div class="emoji">${s.icon}</div><h3>${s.name}</h3><p>Ver conteúdos e atividades</p></div>`);el().innerHTML=h+"</div>"}
+function openSubject(name){currentSubject=name;let s=subjects.find(x=>x.name===name);let h=`<button class="back" onclick="subjectsPage()">← Disciplinas</button><div class="pagehead"><h2>${s.icon} ${name}</h2><p>Escolhe uma secção.</p></div><div class="grid">`;sections.forEach(x=>h+=`<button class="tile" onclick="openSection('${x.name}')"><div class="emoji">${x.icon}</div><h3>${x.name}</h3><p>${x.desc}</p></button>`);el().innerHTML=h+"</div>"}
+function openSection(name){currentSection=name;let list=topics[currentSubject]||[];let h=`<button class="back" onclick="openSubject('${currentSubject}')">← ${currentSubject}</button><div class="pagehead"><h2>${name}</h2><p>${currentSubject} · temas disponíveis</p></div>`;if(!list.length){h+=`<div class="empty"><h3>Conteúdos em preparação</h3><p>Esta disciplina já está criada. Os temas e materiais serão acrescentados progressivamente, seguindo as Aprendizagens Essenciais.</p></div>`;el().innerHTML=h;return}
+if(name==="Exercícios"||name==="Preparação para testes"){list.forEach(t=>h+=`<button class="topic" onclick="startQuiz('${t.name}','${name}')"><span>✏️ <strong>${t.name}</strong><small>${name==="Exercícios"?"Prática com perguntas":"Mini-teste de treino"}</small></span><span>Começar →</span></button>`)}
+else list.forEach(t=>h+=`<button class="topic" onclick="openTopic('${t.name}')"><span>${t.icon} <strong>${t.name}</strong><small>Consultar ${name.toLowerCase()}</small></span><span>→</span></button>`);el().innerHTML=h}
+function getTopic(name){return (topics[currentSubject]||[]).find(t=>t.name===name)||Object.values(topics).flat().find(t=>t.name===name)}
+function openTopic(name){let t=getTopic(name);if(!t)return;currentTopic=t;let h=`<button class="back" onclick="openSection(currentSection)">← Voltar aos temas</button><div class="pagehead"><h2>${t.icon} ${t.name}</h2><p>${currentSubject}</p><button class="star" onclick="toggleFav('${t.name}')">${favorites.includes(t.name)?"⭐ Guardado":"☆ Guardar favorito"}</button></div><div class="panel"><h3>📝 Resumo</h3><p>${t.summary}</p></div><div class="panel"><h3>📚 Matéria</h3>${t.body.map(p=>`<p>${p}</p>`).join("")}<div class="note"><strong>Exemplo:</strong><br>${t.example}</div></div><button class="primary" onclick="startQuiz('${t.name}','Exercícios')">✏️ Praticar este tema</button>`;el().innerHTML=h}
+function toggleFav(name){favorites=favorites.includes(name)?favorites.filter(x=>x!==name):[...favorites,name];save();if(currentTopic)openTopic(name);else favoritesPage()}
+function favoritesPage(){setNav(2);let h=`<div class="pagehead"><h2>⭐ Os meus favoritos</h2><p>Os temas que guardaste.</p></div>`;if(!favorites.length)h+=`<div class="empty">Ainda não guardaste temas. Abre um resumo e carrega em «Guardar favorito».</div>`;else favorites.forEach(n=>h+=`<button class="topic" onclick="openSaved('${n}')"><strong>⭐ ${n}</strong><span>Consultar →</span></button>`);el().innerHTML=h}
+function openSaved(n){currentSubject=Object.keys(topics).find(s=>topics[s].some(t=>t.name===n))||"Matemática";currentSection="Resumos";openTopic(n)}
+function settingsPage(){setNav(3);el().innerHTML=`<div class="pagehead"><h2>⚙️ Definições</h2><p>Personaliza a tua Study Brain.</p></div><div class="panel"><h3>🌗 Aparência</h3><p>Usa o botão no topo para alternar entre o modo claro e escuro. A escolha fica guardada neste navegador.</p></div><div class="panel"><h3>💾 Os teus dados</h3><p>Favoritos e resultados são guardados localmente neste navegador.</p><button class="secondary" onclick="showScores()">Ver histórico de resultados</button></div><div class="panel"><h3>ℹ️ Sobre</h3><p>Study Brain · Aprende. Pratica. Conquista.</p><p>Versão de demonstração. Ainda não é uma aplicação Android nem está configurada para funcionamento totalmente offline.</p></div>`}
+function showScores(){let h=`<button class="back" onclick="settingsPage()">← Definições</button><div class="pagehead"><h2>🏆 Histórico de resultados</h2></div>`;if(!scores.length)h+=`<div class="empty">Ainda não tens resultados guardados.</div>`;else scores.slice().reverse().forEach(s=>h+=`<div class="panel"><strong>${s.subject} · ${s.topic}</strong><p>${s.date}</p><div class="stats"><div class="stat"><strong>${s.percent}%</strong>Resultado</div><div class="stat"><strong>${s.grade}</strong>Classificação</div></div></div>`);el().innerHTML=h}
+function startQuiz(topicName,mode){let t=getTopic(topicName);if(!t||!t.questions.length){el().innerHTML=`<div class="empty">Ainda não existem perguntas para este tema.</div>`;return}currentTopic=t;quiz=t.questions;quizIndex=0;answers=[];quizMode=mode;el().innerHTML=`<button class="back" onclick="openSection('${mode}')">← Voltar</button><div class="pagehead"><h2>${mode==="Exercícios"?"✏️ Exercícios":"🎯 Preparação para teste"}</h2><p>${currentSubject} · ${t.name}</p></div><div class="panel"><h3>Antes de começar</h3><p>Este treino tem ${quiz.length} perguntas. Lê cada pergunta com atenção e escolhe uma resposta.</p><p>Não há limite de tempo. Podes repetir o treino.</p><button class="primary" onclick="renderQuestion()">Começar</button></div>`}
+let quizMode="Exercícios";
+function renderQuestion(){let q=quiz[quizIndex];let h=`<div class="pagehead"><h2>${quizMode}</h2><p>Pergunta ${quizIndex+1} de ${quiz.length}</p><div class="progress"><span style="width:${(quizIndex/quiz.length)*100}%"></span></div></div><div class="panel"><h3>${q.q}</h3>`;q.opts.forEach((o,i)=>h+=`<button class="option ${answers[quizIndex]===i?"selected":""}" onclick="choose(${i})">${String.fromCharCode(65+i)}. ${o}</button>`);h+=`<button class="primary" onclick="nextQuestion()" ${answers[quizIndex]===undefined?"disabled":""}>${quizIndex===quiz.length-1?"Terminar":"Seguinte →"}</button></div>`;el().innerHTML=h}
+function choose(i){answers[quizIndex]=i;renderQuestion()}
+function nextQuestion(){if(answers[quizIndex]===undefined)return;if(quizIndex<quiz.length-1){quizIndex++;renderQuestion()}else showResult()}
+function showResult(){let correct=quiz.filter((q,i)=>answers[i]===q.a).length;let percent=Math.round(correct/quiz.length*100);let grade=percent<20?"Fraco":percent<50?"Insuficiente":percent<70?"Suficiente":percent<90?"Bom":"Muito Bom";scores.push({subject:currentSubject,topic:currentTopic.name,percent,grade,date:new Date().toLocaleString("pt-PT")});save();let h=`<div class="pagehead"><h2>🏆 Resultado</h2></div><div class="panel"><h2>${grade}</h2><div class="stats"><div class="stat"><strong>${percent}%</strong>Classificação</div><div class="stat"><strong>${correct}/${quiz.length}</strong>Respostas certas</div></div></div><div class="pagehead"><h3>Correção das respostas</h3></div>`;quiz.forEach((q,i)=>h+=`<div class="panel"><strong>${i+1}. ${q.q}</strong><p>${answers[i]===q.a?"✅ Correto":"❌ A resposta certa é: "+q.opts[q.a]}</p><p class="muted">${q.why}</p></div>`);h+=`<button class="primary" onclick="startQuiz('${currentTopic.name}','${quizMode}')">Repetir treino</button> <button class="secondary" onclick="openSection('${quizMode}')">Voltar aos temas</button>`;el().innerHTML=h}
+function searchPage(){setNav(-1);el().innerHTML=`<div class="pagehead"><h2>🔎 Pesquisar temas</h2><p>Escreve o nome de um tema.</p></div><input id="search" class="search" placeholder="Ex.: Equações, Present Simple..." oninput="searchResults()"><div id="results"></div>`}
+function searchResults(){let q=document.getElementById("search").value.toLowerCase();let found=Object.entries(topics).flatMap(([s,ts])=>ts.filter(t=>t.name.toLowerCase().includes(q)).map(t=>({s,t})));document.getElementById("results").innerHTML=!q?"":found.length?found.map(x=>`<button class="topic" onclick="currentSubject='${x.s}';currentSection='Resumos';openTopic('${x.t.name}')"><strong>${x.s} · ${x.t.name}</strong><span>→</span></button>`).join(""):`<div class="empty">Não encontrámos esse tema nos conteúdos disponíveis.</div>`}
+home();
+</script>
+</body>
+</html>
